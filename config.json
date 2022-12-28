@@ -1,0 +1,14 @@
+{
+    "suite": "data/trialSuite.csv",
+    "certificate":"",
+    "config":[
+        {
+            "key":"endpoint",
+            "value":"https://reqres.in"
+        },
+        {
+            "key":"port",
+            "value":"8080"
+        }
+    ]
+}

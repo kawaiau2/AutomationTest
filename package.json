@@ -1,0 +1,30 @@
+{
+   "name": "test01",
+   "version": "1.0.0",
+   "description": "API test for getting user list and login",
+   "type": "module",
+   "scripts": {
+      "test": "mocha -t 12000 -reporter ./util/customReporter.cjs",
+      "regression": "mocha --grep '@regression'",
+      "trial": "echo 'trial'",
+      "loginTest": "mocha ./test/Login"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git://github.com/kawaiau2/ApiTest.git"
+   },
+   "dependencies": {
+      "chai": "^4.3.7",
+      "mocha": "^10.2.0",
+      "newman": "^5.3.1",
+      "q": "^1.5.1",
+      "path": "^0.12.7",
+      "to-json-schema": "^0.2.5",
+      "csvtojson":"^2.0.10",
+      "json-diff":"^1.0.0",
+      "csv-writer": "^1.6.0",
+      "data-query": "^2.3.3"
+   },
+   "devDependencies": {
+   }
+}
