@@ -57,6 +57,7 @@ for(let j=0; j < testSuite.length; j++){
                         let caseHeader = "Test case name: " + caseName + " ==> "
                         console.log(caseHeader + "start>>>>>");
                         for(let i=0;i<stages.length;i++){
+                            console.log("stage:" + stages[i]);
                             switch(stages[i]){
                                 case 'initEnv':
                                     console.log(caseHeader + stages[i]+'>>>>>>');
@@ -80,13 +81,14 @@ for(let j=0; j < testSuite.length; j++){
                                     console.log(caseHeader + stages[i]+'>>>>>>');
                                     if(iteration.preRequest!= '' && iteration.preRequest!= null){
                                         let preRequests = iteration.preRequest.split(';');
-                                        for (let k=0; preRequests.length; k++){
+                                        // console.log(preRequests);
+                                        for (let k=0; k < preRequests.length; k++){
                                             await new Promise((resolve, reject) => {
                                                 newman.run({
                                                     collection: JSON.parse(collectionJson),
-                                                    folder: iteration.preRequest,
+                                                    folder: preRequests[k],
                                                     globals: {},
-                                                    environment: 'data/' + preRequests[k] + '/env.postman_environment.json',
+                                                    environment: 'preRequest/' + preRequests[k] + '/env.postman_environment.json',
                                                     envVar: instanceEnv
                                                 })
                                                 .on('start', (error,args)=> {
@@ -105,13 +107,14 @@ for(let j=0; j < testSuite.length; j++){
                                                 });
                                             })
                                         }
-                                       
                                     }
                                     break;
                                 case 'req':
-                                    // console.log(caseHeader + stages[i]+'>>>>>>');
+                                    console.log(caseHeader + stages[i]+'>>>>>>');
                                     const postIteration = await import ('../common/posttest.js');
                                     const postTesttc = await import('../common/posttestcase.js');
+                                    console.log('data/' + testSet + '/env.postman_environment.json');
+                                        console.log(iteration);
                                     await new Promise((resolve, reject) => {
                                         newman.run({
                                             collection: JSON.parse(collectionJson),
@@ -144,9 +147,9 @@ for(let j=0; j < testSuite.length; j++){
                                                 // console.log("Test case name: " + caseName + " ==> " + step + ": " + requestName + " (code: " + args.response.code + ", time: " + args.response.responseTime + "ms, size: " + args.response.responseSize + ")");
                                                 // console.log("Request Detail:");
                                                 // console.log(JSON.stringify(args.request, null, 4));
-                                                // console.log("Response:");
+                                                console.log("Response:");
                                                 let response = JSON.parse(args.response.stream.toString());
-                                                // console.log(response);
+                                                console.log(response);
                                                 let schema = toJsonSchema(JSON.parse(args.response.stream.toString()));
                                                 //console.log(JSON.stringify(toJsonSchema(JSON.parse(args.response.stream.toString())), null, 4));
                                                 fs.writeFile('./result/' + fileName + '_response.json', JSON.stringify(response, null, 4),()=>{});

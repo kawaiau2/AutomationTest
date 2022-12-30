@@ -1,0 +1,9 @@
+node_modules*
+result/*
+common/prelogin*
+data/*
+data.zip
+package-lock.json
+text
+.DS_Store
+preRequest/*

@@ -18,7 +18,7 @@ case $1 in
         echo $suite
         docker build -t autotest .
         docker images
-        docker run -d --name autotest$3 --mount type=bind,source="$(pwd)"/response,target=/apiTest/response -e runtest="$suite" autotest && docker logs -f autotest$3
+        docker run -d --name autotest$3 --mount type=bind,source="$(pwd)"/result,target=/apiTest/result --mount type=bind,source="$(pwd)"/data,target=/apiTest/data --mount type=bind,source="$(pwd)"/cert,target=/apiTest/cert --mount type=bind,source="$(pwd)"/common,target=/apiTest/common -e runtest="$suite" autotest && docker logs -f autotest$3
         ;;
     rm)
         docker container rm autotest$2

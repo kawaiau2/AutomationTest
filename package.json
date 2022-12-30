@@ -4,7 +4,7 @@
    "description": "API test for getting user list and login",
    "type": "module",
    "scripts": {
-      "test": "mocha -t 12000 -reporter ./util/customReporter.cjs",
+      "test": "mocha -t 120000 -reporter ./util/customReporter.cjs",
       "regression": "mocha --grep '@regression'",
       "trial": "echo 'trial'",
       "loginTest": "mocha ./test/Login"
