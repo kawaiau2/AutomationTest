@@ -4,10 +4,10 @@
    "description": "API test for getting user list and login",
    "type": "module",
    "scripts": {
-      "test": "mocha -t 120000 -reporter ./util/customReporter.cjs",
+      "test": "mocha -debug -t 1800000 -reporter ./util/customReporter.cjs",
+      "debug": "mocha -t 120000",
       "regression": "mocha --grep '@regression'",
-      "trial": "echo 'trial'",
-      "loginTest": "mocha ./test/Login"
+      "trial": "echo 'trial'"
    },
    "repository": {
       "type": "git",
@@ -15,16 +15,19 @@
    },
    "dependencies": {
       "chai": "^4.3.7",
-      "mocha": "^10.2.0",
-      "newman": "^5.3.1",
-      "q": "^1.5.1",
-      "path": "^0.12.7",
-      "to-json-schema": "^0.2.5",
-      "csvtojson":"^2.0.10",
-      "json-diff":"^1.0.0",
       "csv-writer": "^1.6.0",
-      "data-query": "^2.3.3"
-   },
-   "devDependencies": {
+      "csvtojson": "^2.0.10",
+      "data-query": "^2.3.3",
+      "json-diff": "^1.0.0",
+      "mocha": "^10.2.0",
+      "newman": "^5.3.2",
+      "path": "^0.12.7",
+      "q": "^1.5.1",
+      "socks-proxy-agent": "^7.0.0",
+      "to-json-schema": "^0.2.5",
+      "proxy-agent": "^5.0.0",
+      "xml-js": "^1.6.11",
+      "xml-formatter": "^3.3.2",
+      "crypto-js": "^4.1.1"
    }
 }

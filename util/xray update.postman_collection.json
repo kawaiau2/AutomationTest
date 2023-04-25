@@ -1,0 +1,108 @@
+{
+	"info": {
+		"_postman_id": "a7b54497-55f4-4d56-8119-47e7f136e52b",
+		"name": "xray update",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "import test result",
+			"item": [
+				{
+					"name": "import test result",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.request.body= {\r",
+									"    mode: \"raw\",\r",
+									"    raw: \"{{result}}\",\r",
+									"    options: {\r",
+									"        raw: {\r",
+									"            language: 'json'\r",
+									"        }\r",
+									"    }\r",
+									"};"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "xxx",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://xxx-jira.xxx.biz/rest/raven/1.0/import/execution",
+							"protocol": "https",
+							"host": [
+								"xxx-jira",
+								"xxx",
+								"biz"
+							],
+							"path": [
+								"rest",
+								"raven",
+								"1.0",
+								"import",
+								"execution"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get test step",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "xxx",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "xxx@xxx.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://xxx-jira.xxx.biz/rest/raven/1.0/api/test/xxx-710/step",
+					"protocol": "https",
+					"host": [
+						"xxx-jira",
+						"xxx",
+						"biz"
+					],
+					"path": [
+						"rest",
+						"raven",
+						"1.0",
+						"api",
+						"test",
+						"xxx-710",
+						"step"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

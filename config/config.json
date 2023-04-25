@@ -1,0 +1,33 @@
+{
+    "suite": "data/trialSuite.csv",
+    "certificate":{
+        "host": [
+            "https://xxx-apigw4-uat.xxx.biz:8556/*",
+            "https://xxx-apigw4-sit.xxx.biz:8556/*"
+        ],
+        "key": "./cert/xxx-apigw4-sit.xxx.biz.key",
+        "cert": "./cert/xxx-apigw4-sit.xxx.biz.cer"
+    },
+    "env":[
+        {
+            "key":"SITEndPoint",
+            "value":"{{sitendpoint}}",
+            "type":"any"
+        },
+        {
+            "key":"UATEndPoint",
+            "value":"https://uat.xxx.biz",
+            "type":"any"
+        }
+    ],
+    "updateJiraResult": false,
+    "schemaCheck": false, 
+    "log":{
+        "request": false,
+        "response": false,
+        "schema": false,
+        "console": false,
+        "preRequest": false,
+        "initEnv": false
+    }
+}
