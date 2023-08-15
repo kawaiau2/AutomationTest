@@ -1,6 +1,5 @@
 import '../util/util.js'; 
 import csvtojson from 'csvtojson';
-import * as fs from 'fs';
 csvtojson().fromFile("./data/xray update/result.csv").then();
 let testcsv = await csvtojson().fromFile("./data/xray update/result.csv");
 function initEnv(iteration, testSet, instanceEnv, runCount) {

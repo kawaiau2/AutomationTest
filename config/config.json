@@ -2,32 +2,49 @@
     "suite": "data/trialSuite.csv",
     "certificate":{
         "host": [
-            "https://xxx-apigw4-uat.xxx.biz:8556/*",
-            "https://xxx-apigw4-sit.xxx.biz:8556/*"
+            "https://*",
+            "https://*"
         ],
-        "key": "./cert/xxx-apigw4-sit.xxx.biz.key",
-        "cert": "./cert/xxx-apigw4-sit.xxx.biz.cer"
+        "key": "./cert/xxx.key",
+        "cert": "./cert/xxx.cer"
     },
     "env":[
         {
-            "key":"SITEndPoint",
-            "value":"{{sitendpoint}}",
+            "key":"xxxEndPoint",
+            "value":"{{domain_uat_ec}}",
             "type":"any"
         },
         {
-            "key":"UATEndPoint",
-            "value":"https://uat.xxx.biz",
+            "key":"xxxPCEndPoint",
+            "value":"https://*",
+            "type":"any"
+        },
+        {
+            "key":"xxxCorpLink",
+            "value":"UAT",
             "type":"any"
         }
     ],
-    "updateJiraResult": false,
-    "schemaCheck": false, 
+    "updateJiraResult": true,
+    "schemaCheck": true, 
     "log":{
         "request": false,
-        "response": false,
-        "schema": false,
+        "response": true,
+        "schema": true,
         "console": false,
         "preRequest": false,
         "initEnv": false
-    }
+    },
+    "delay": {
+        "instantWait": 500,
+        "normalWait": 5000,
+        "longWait": 120000,
+        "pageLoad": 30000,
+        "pollingWait": 1000 
+    },
+    "closeBrowserIfFailure": true,
+    "browser": "Edge",
+    "headless": false,
+    "screenCap": true,
+    "allStepScreenCap": true
 }

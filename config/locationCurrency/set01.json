@@ -1,0 +1,18 @@
+{
+    "HK":{
+        "fullName": "Hong Kong",
+        "currency": "HK$"
+    },
+    "Macau":{
+        "fullName": "Macau",
+        "currency": "MOP"
+    },
+    "China":{
+        "fullName": "China",
+        "currency": "RMB"
+    },
+    "default":{
+        "fullName": "",
+        "currency": "HK$"
+    }
+}

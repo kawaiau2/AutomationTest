@@ -1,6 +1,6 @@
 'use strict';
 require('util');
-const updateInstantResult = require('./UpdateInstantResult.cjs')
+const updateInstantResult = require('./updateInstantResult.cjs')
 const Mocha = require('mocha');
 const csvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
@@ -78,7 +78,12 @@ class MyReporter {
                 console.log("err: " + err);
             });
             if(updateJiraResult)
-                updateInstantResult.updateResult(testPlanId, testExecutionId, test.title.split(':')[0], test.parent.title, 'PASS');
+                updateInstantResult.updateResult(
+                    testPlanId, testExecutionId,
+                    test.title.split(':')[0],
+                    test.parent.title,
+                    'PASS'
+                );
         })
         .on(EVENT_TEST_FAIL, (test, err) => {
             console.log("Case \"" + test.title + "\" is failed");
@@ -94,7 +99,14 @@ class MyReporter {
                 console.log("err: " + err);
             });
             if(updateJiraResult)
-                updateInstantResult.updateResult(testPlanId, testExecutionId, test.title.split(':')[0], test.parent.title, 'FAIL', JSON.stringify(err, null, 4));
+                updateInstantResult.updateResult(
+                    testPlanId,
+                    testExecutionId,
+                    test.title.split(':')[0],
+                    test.parent.title,
+                    'FAIL',
+                    JSON.stringify(err, null, 4)
+                );
         })
         .on(EVENT_RUN_END, () => {
             console.log(`Test ended: ${stats.passes}/${stats.passes + stats.failures}`);
