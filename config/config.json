@@ -2,21 +2,21 @@
     "suite": "data/trialSuite.csv",
     "certificate":{
         "host": [
-            "https://aiahk-apigw4-uat.aiaazure.biz:8556/*",
-            "https://aiahk-apigw4-sit.aiaazure.biz:8556/*"
+            "https://aaahk-apigw4-uat.aaaazure.biz:8556/*",
+            "https://aaahk-apigw4-sit.aaaazure.biz:8556/*"
         ],
-        "key": "./cert/aiahk-apigw4-sit.aia.biz.key",
-        "cert": "./cert/aiahk-apigw4-sit.aia.biz.cer"
+        "key": "./cert/aaahk-apigw4-sit.aaa.biz.key",
+        "cert": "./cert/aaahk-apigw4-sit.aaa.biz.cer"
     },
     "env":[
         {
-            "key":"aiaConnectEndPoint",
+            "key":"aaaConnectEndPoint",
             "value":"{{domain_uat_ec}}",
             "type":"any"
         },
         {
             "key":"fouPCEndPoint",
-            "value":"https://aiahk-re-fou-ua1.aiaazure.biz",
+            "value":"https://aaahk-re-fou-ua1.aaaazure.biz",
             "type":"any"
         },
         {

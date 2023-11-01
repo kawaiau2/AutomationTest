@@ -146,7 +146,7 @@ async function req(iteration, testSet){
                                 console.log("Response: " + args.response.stream.toString());
                                 fs.writeFile('./result/' + fileName + '_response.json', args.response.stream.toString(),()=>{});
                             } else {
-                                if(JSON.parse(xmljs.xml2json(args.response.stream.toString())).elements[0].elements[0].elements[0].attributes['xmlns:ns2'] != "http://ws.ipos.aiahk/") {
+                                if(JSON.parse(xmljs.xml2json(args.response.stream.toString())).elements[0].elements[0].elements[0].attributes['xmlns:ns2'] != "http://ws.ipos.aaahk/") {
                                     fs.writeFile('./result/' + fileName + '_response.json', args.response.stream.toString(),()=>{});
                                     console.log("Response not JSON:\r\n" + xmlFormat(args.response.stream.toString()));
                                     console.log("Schema: not JSON response")
