@@ -43,12 +43,17 @@ async function closeBrowser(forceQuit){
 async function launchBrowser(instanceEnv){
     let resolution = jsonQuery('data[key=screenResolution].value', {data: {data:instanceEnv}}).value;
     let browser = jsonQuery('data[key=browser].value', {data: {data:instanceEnv}}).value;
-    if(!hasData(resolution))
-        resolution = "2560,2560";
+    let fullScr = false;
     
+    if(!hasData(resolution)){
+        resolution = "1600,1200";
+        fullScr = true;
+    }
+       
     if(!hasData(browser))
         browser = global.config.browser;
-        
+    else 
+        global.config.browser = browser;
     switch(browser){
         case 'Chrome':
             const chromeService = new chrome.ServiceBuilder(path.resolve('external/chromedriver'))
@@ -80,7 +85,7 @@ async function launchBrowser(instanceEnv){
             throw new AssertError(browser + " is not supported");
 
     }
-    if(!hasData(resolution))
+    if(fullScr)
         await driver.manage().window().maximize();
 }
 

@@ -3,6 +3,7 @@
 ### Direct Run
   &nbsp;&nbsp;npm install  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//git pull test script  
+  &nbsp;&nbsp;Copy cert and data folder  
   &nbsp;&nbsp;npm test  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//i.e. npm --config=./config/{{config name}} --planId={{Plan JIRA Key}} --execId={{Plan JIRA Key}} test  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//i.e. mocha -t 120000  
@@ -22,6 +23,6 @@
 ### Git
   &nbsp;&nbsp;git init  
   &nbsp;&nbsp;git add --all  
-  &nbsp;&nbsp;git commit -m "Initial Commit"  
+  &nbsp;&nbsp;git commit -m "xxx-xxx Initial Commit"  
   &nbsp;&nbsp;git remote add origin https://{{username}}:{{[Personal access tokens](https://aiahk-bitbucket.aiaazure.biz/plugins/servlet/access-tokens/manage "Click here to setup Personal access tokens")}}@aiahk-bitbucket.aiaazure.biz/tribe/automation.git  
   &nbsp;&nbsp;git push -u origin {{branch}}

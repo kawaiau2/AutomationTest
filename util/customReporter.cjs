@@ -49,7 +49,7 @@ class MyReporter {
         this._indents = 0;
         const stats = runner.stats;
 
-        let executionDate = '';
+        let executionDate = new Date();
 
         runner
         .on(EVENT_RUN_BEGIN, () => {
@@ -65,18 +65,25 @@ class MyReporter {
             this.decreaseIndent();
         })
         .on(EVENT_TEST_PASS, (test) => {
+            executionDate = new Date();
             console.log("Case \"" + test.title + "\" is passed");
             writeCSV.writeRecords([{
                 suite: test.parent.title,
                 case: test.title,
                 result: 'Passed',
-                date: executionDate,
+                date: executionDate.toLocaleString(),
                 duration: test.duration
             }]).then(()=>{
                 console.log("Saved result");
             }).catch((err)=>{
                 console.log("err: " + err);
             });
+            if(config.caseLog.log)
+                fs.writeFileSync(
+                    "result/" + test.parent.title + "/" + test.title.replace(": ", "_") + "_pass.log",
+                    caseLog + "\r\nResult:Pass, Date:" +  executionDate.toLocaleString() + ", Duration: " + test.duration
+                    );
+            clearCaseLog();
             if(updateJiraResult)
                 updateInstantResult.updateResult(
                     testPlanId, testExecutionId,
@@ -86,18 +93,25 @@ class MyReporter {
                 );
         })
         .on(EVENT_TEST_FAIL, (test, err) => {
+            executionDate = new Date();
             console.log("Case \"" + test.title + "\" is failed");
             writeCSV.writeRecords([{
                 suite: test.parent.title,
                 case: test.title,
                 result: 'Failed',
-                date: executionDate,
+                date: executionDate.toLocaleString(),
                 duration: test.duration
             }]).then(()=>{
                 console.log("Saved result");
             }).catch((err)=>{
                 console.log("err: " + err);
             });
+            if(config.caseLog.log)
+                fs.writeFileSync(
+                    "result/" + test.parent.title + "/" + test.title.replace(": ", "_") + "_fail.log",
+                    caseLog + "\r\nError Log:\r\n" + JSON.stringify(err, null, 4) + "\r\nResult: Fail, Date:" +  executionDate.toLocaleString() + ", Duration: " + test.duration
+                );
+            clearCaseLog();
             if(updateJiraResult)
                 updateInstantResult.updateResult(
                     testPlanId,

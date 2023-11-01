@@ -46,6 +46,7 @@ async function act(webStep, instanceEnv, iteration, runCount){
   .on('responseReceived', res => {
     if(res.request.url == expectEndPoint && res.request.method == expectMethod){
       response = res;
+      console.log(res.request.url + "   " + res.request.method)
       // console.log('expect code:' + expectCode)
       // console.log(res.response.status)
       if(expectCode != '' && expectCode != null && expectCode != undefined)
@@ -106,7 +107,7 @@ function checkSchema(actualBody, expectBody, type){
   if (isJSON){
     let schemaCheck = diffString(toJsonSchema(actualBody), toJsonSchema(JSON.parse(expectBody)));
     if(schemaCheck != ''){
-      console.log(schemaCheck);
+      // console.log(schemaCheck);
       throw new AssertError("Schema not match");
     }
     console.log(type + " Schema Check Passed");

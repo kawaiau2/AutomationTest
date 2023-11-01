@@ -11,27 +11,22 @@ AssertError.prototype = Error.prototype;
 async function act(webStep, instanceEnv, iteration, runCount){
     let waitTime = webAction.selectWait(webStep);
     // console.log(jsonQuery('data[page=' + webStep.page + ' & name=' + webStep.object + ']', {data: webAction.pageObject}).value)
-    try{
-        await scriptClick.act(webStep, instanceEnv, iteration, runCount);
-        // console.log(jsonQuery('data[page=' + webStep.page + ' & name=ageOption].value1', {data: webAction.pageObject}).value.replace("{{i}}", ageRangeIdex(instanceEnv)))
-        await webAction.driver.wait(
-            until.elementLocated(
-                By.xpath(
-                    jsonQuery(
-                        'data[page=' + webStep.page + ' & name=ageOption].value1',
-                        {data: webAction.pageObject}
-                    ).value
-                .replace("{{i}}", ageRangeIdex(instanceEnv))
-                )
-            ),
-            waitTime,
-            'Timed out after ' + waitTime/1000 + 's'
-        )
-        .then(el => webAction.driver.executeScript("arguments[0].click();", el))
-    } catch(e){
-        console.log(e);
-        throw e
-    }
+    await scriptClick.act(webStep, instanceEnv, iteration, runCount);
+    // console.log(jsonQuery('data[page=' + webStep.page + ' & name=ageOption].value1', {data: webAction.pageObject}).value.replace("{{i}}", ageRangeIdex(instanceEnv)))
+    await webAction.driver.wait(
+        until.elementLocated(
+            By.xpath(
+                jsonQuery(
+                    'data[page=' + webStep.page + ' & name=ageOption].value1',
+                    {data: webAction.pageObject}
+                ).value
+            .replace("{{i}}", ageRangeIdex(instanceEnv))
+            )
+        ),
+        waitTime,
+        'Timed out after ' + waitTime/1000 + 's'
+    )
+    .then(el => webAction.driver.executeScript("arguments[0].click();", el))
     
     return instanceEnv;
 }

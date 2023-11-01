@@ -27,9 +27,10 @@ async function act(webStep, instanceEnv, iteration, runCount){
     .then(el => {
         return el.getText();
     })
-    .then(innerText => {
-        assert.equal(innerText,webStep.value);
+    .then((textValue) => {
+        assert.equal(textValue, webStep.value);
     })
+
     return instanceEnv;
 }
 

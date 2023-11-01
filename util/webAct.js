@@ -37,7 +37,9 @@ async function act(webStep, instanceEnv, iteration, stepNo) {
                 // console.log({data:instanceEnv})
                 if( loopStart == 'na' || loopStart == null || loopStart == undefined)
                     await webAction.screenCap(true, step);
+                    
             } catch(e){
+                console.log("!!!Capture Failed!!!")
                 console.log(e)
                 await webAction.screenCap(false);
                 webAction.closeBrowser();

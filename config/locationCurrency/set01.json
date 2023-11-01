@@ -1,18 +1,72 @@
 {
     "HK":{
-        "fullName": "Hong Kong",
-        "currency": "HK$"
+        "en":{
+            "fullName": "Hong Kong",
+            "currency": "HK$"
+        },
+        "zhhk":{
+            "fullName": "香港",
+            "currency": "港元"
+        },
+        "zhcn":{
+            "fullName": "香港",
+            "currency": "港元"
+        }
     },
     "Macau":{
-        "fullName": "Macau",
-        "currency": "MOP"
+        "en":{
+            "fullName": "Macau",
+            "currency": "MOP"
+        },
+        "zhhk":{
+            "fullName": "澳門",
+            "currency": "澳門幣"
+        },
+        "zhcn":{
+            "fullName": "澳门",
+            "currency": "澳门币"
+        }
     },
     "China":{
-        "fullName": "China",
-        "currency": "RMB"
+        "en":{
+            "fullName": "Mainland China",
+            "currency": "RMB"
+        },
+        "zhhk":{
+            "fullName": "中國內地",
+            "currency": "人民幣"
+        },
+        "zhcn":{
+            "fullName": "中国内地",
+            "currency": "人民币"
+        }
+    },
+    "Mainland":{
+        "en":{
+            "fullName": "Mainland China",
+            "currency": "RMB"
+        },
+        "zhhk":{
+            "fullName": "中國內地",
+            "currency": "人民幣"
+        },
+        "zhcn":{
+            "fullName": "中国内地",
+            "currency": "人民币"
+        }
     },
     "default":{
-        "fullName": "",
-        "currency": "HK$"
+        "en":{
+            "fullName": "",
+            "currency": "HK$"
+        },
+        "zhhk":{
+            "fullName": "",
+            "currency": "港元"
+        },
+        "zhcn":{
+            "fullName": "",
+            "currency": "港元"
+        }
     }
 }

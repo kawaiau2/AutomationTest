@@ -10,13 +10,8 @@ AssertError.prototype = Error.prototype;
 
 async function act(webStep, instanceEnv, iteration, runCount){
     // console.log(jsonQuery('data[page=' + webStep.page + ' & name=' + webStep.object + ']', {data: webAction.pageObject}).value)
-    try{
-        await selectDropDownTwoClick.act(noChildren(webStep, instanceEnv), instanceEnv, iteration, runCount);
-        // console.log(jsonQuery('data[page=' + webStep.page + ' & name=ageOption].value1', {data: webAction.pageObject}).value.replace("{{i}}", ageRangeIdex(instanceEnv)))
-    } catch(e){
-        console.log(e);
-        throw e
-    }
+    await selectDropDownTwoClick.act(noChildren(webStep, instanceEnv), instanceEnv, iteration, runCount);
+    // console.log(jsonQuery('data[page=' + webStep.page + ' & name=ageOption].value1', {data: webAction.pageObject}).value.replace("{{i}}", ageRangeIdex(instanceEnv)))
     
     return instanceEnv;
 }

@@ -3,7 +3,6 @@ import * as webAct from '../util/webAct.js';
 const callCollection = await import ('../util/callNewman.js');
 
 // var driver
-var testSet ='';
 var fileName = '';
 var step = '';
 var isSkipLoop = false;
@@ -21,55 +20,80 @@ function AssertError(msg = "") {
 AssertError.prototype = Error.prototype;
 
 // var isDriverLive = false;
-async function act(webStep, instanceEnv, iteration, testSuiteType, caseName) {
-    webStep = JSON.parse(enrich(JSON.stringify(webStep), instanceEnv));
+async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, testSet) {
+    // webStep = JSON.parse(enrich(JSON.stringify(webStep), instanceEnv));
     isSkipAll = false;
+    var skipReason = "";
+    let stepSkip = false;
+    clearCaseLog();
+    addCaseLog("Case: " + caseName);
     for(let x = 0; x<webStep.length; x++){
-        let stepSkip = isStepSkip(webStep[x], instanceEnv);
-        if(webStep[x].action == 'loopStart'){
+        let step = await JSON.parse(enrich(JSON.stringify(webStep[x]), instanceEnv));
+        if(!isSkipAll){
+            stepSkip = isStepSkip(step, instanceEnv);
+            // console.log (stepSkip + ": " + webStep[x].runCondition + webStep[x].skipCondition);
+            if(stepSkip){
+                if(hasData(step.runCondition))
+                    skipReason = "NOT '" + step.runCondition + "'";
+                if(hasData(step.skipCondition))
+                    skipReason = "'" + step.skipCondition + "'";
+            }
+        }
+        // console.log("000 " + (x+1).toString().padStart(3,'0') + " 000 " + isSkipAll + " 000 " + webStep[x].stepName)
+        if(step.action == 'loopStart'){
             if(stepSkip || isSkipAll){
                 isSkipLoop = true;
-                console.log("!!!!!SKIP LOOP '" + caseName + " ==> Step" + (x+1).toString().padStart(3,'0') + ": " + webStep[x].stepName + "' SKIP LOOP!!!!!");
+                stepResult(caseName, x, step.stepName, skipReason, true);
             } else {
-                totalLoop = webStep[x].value;
+                totalLoop = step.value;
                 if(!Number.isInteger(totalLoop))
-                    console.log(caseName + " ==> Step" + (x+1).toString().padStart(3,'0') + ": " + webStep[x].stepName);
+                stepResult(caseName, x, step.stepName);
                 instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
                 instanceEnv.push({ type:'any', value:x+1, key:'loopStart' });
             } 
-        } else if(webStep[x].action == 'loopEnd') {
+        } else if(step.action == 'loopEnd') {
             if(isSkipLoop || isSkipAll)
                 isSkipLoop = false;
             else {
                 if(!Number.isInteger(totalLoop))
-                    console.log(caseName + " ==> Step" + (x+1).toString().padStart(3,'0') + ": " + webStep[x].stepName);
+                    stepResult(caseName, x, step.stepName);
                 instanceEnv = instanceEnv.filter(el => el['key'] != 'loopEnd');
                 instanceEnv.push({ type:'any', value:x-1, key:'loopEnd' });
                 loopCount++;
                 instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
                 instanceEnv.push({ type:'any', value:'na', key:'loopStart' });
-                let step = 'Step' + (x+1).toString().padStart(3, '0');
-                await webAct.setFileName(iteration, webStep[x].stepName, step);
-                await webAction.screenCap(true, step);
+                let stepNo = 'Step' + (x+1).toString().padStart(3, '0');
+                await webAct.setFileName(iteration, step.stepName, stepNo);
+                await webAction.screenCap(true);
             }
         } else {
             if(!(isSkipLoop || stepSkip || isSkipAll)){
-                if(testSuiteType == 'api' || webStep[x].action == 'api' || iteration.type == 'api'){
+                if(testSuiteType == 'api' || step.action == 'api' || iteration.type == 'api'){
                     callCollection.setInstanceEnv(instanceEnv);
                     instanceEnv = await callCollection.req(iteration, testSet)
                 } else {
-                    console.log(caseName + " ==> Step" + (x+1).toString().padStart(3,'0') + ": " + webStep[x].stepName);
-                    await webAct.act(webStep[x], instanceEnv, iteration, x+1);
+                    stepResult(caseName, x, step.stepName);
+                    instanceEnv = await webAct.act(step, instanceEnv, iteration, x+1);
                 }
             } else 
-                console.log("!!!!!SKIP STEP '" + caseName + " ==> Step" + (x+1).toString().padStart(3,'0') + ": " + webStep[x].stepName + "' SKIP STEP!!!!!");
+                stepResult(caseName, x, step.stepName, skipReason, false);            
         }
-
-        if(hasData(webStep[x].endCondition))
-            isSkipAll = skipLogic(webStep[x].endCondition.split(";;"), instanceEnv);
-            
+///redo
+        if(hasData(step.endCondition) && !isSkipAll){
+            isSkipAll = skipLogic(step.endCondition.split(";;"), instanceEnv);
+            if(isSkipAll){
+                console.log("Case End Screen Capturing...")
+                console.log(step.endCondition)
+                await webAction.screenCap(true);
+            }
+        } 
+///redo
+        if(global.config.delay.debugWait > 0 )
+            await webAction.driver.sleep(global.config.delay.debugWait);
     }
-    await webAct.act({action: 'closeBrowser'}, instanceEnv)
+
+    if(testSuiteType != 'api' && webStep[webStep.length-1].action != 'api' && iteration.type != 'api')
+        instanceEnv = await webAct.act({action: 'closeBrowser'}, instanceEnv)
     instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
     return instanceEnv;
 }
@@ -138,6 +162,22 @@ function skipLogic(condtions, instanceEnv){
                         console.log(logics[j]);
                 }
     return false;
+}
+
+function stepResult(caseName, stepNo, stepName, skipReason, isLoop){
+    let step = "Step" + (stepNo+1).toString().padStart(3,'0') + ": " + stepName;
+    if(hasData(skipReason)){
+        if(isLoop){
+            console.log("!!!!!SKIP LOOP by " + skipReason + ": " + caseName + " ==> " + step + "' SKIP LOOP!!!!!");
+            addCaseLog("!!!SKIP LOOP by " + skipReason + "!!! " + step, "second");
+        } else {
+            console.log("!!!!!SKIP STEP by " + skipReason + ": " + caseName + " ==> " + step + "' SKIP STEP!!!!!");
+            addCaseLog("!!!SKIP STEP by " + skipReason + "!!! " + step, "second");
+        } 
+    } else {
+        console.log(caseName + " ==> " + step);
+        addCaseLog(step);
+    }
 }
 
 export { act };

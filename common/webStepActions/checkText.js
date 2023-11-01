@@ -13,11 +13,12 @@ async function act(webStep, instanceEnv, iteration, runCount){
     let waitTime = webAction.selectWait(webStep);
     await webAction.driver.wait(
         until.elementLocated(
-            By.xpath("//*[contains(text(), '" + enrich(webStep.value, instanceEnv) + "')]")
+            By.xpath('//*[contains(text(), "' + enrich(webStep.value, instanceEnv) + '")]')
         ),
         waitTime,
         'Timed out after ' + waitTime/1000 + 's'
     )
+
     return instanceEnv;
 }
 

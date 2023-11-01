@@ -29,7 +29,7 @@ function enrich (content, instanceEnv){
                 let location = jsonQuery(
                     'data[key=' + splitEnd[0].split(';;')[1] + '].value',
                     {data: {data: instanceEnv}}).value
-                enriched += locationCurrencyMapping(location,'currency', splitEnd[0].split(';;')[2]) + splitEnd[1];
+                enriched += locationCurrencyMapping(location,'currency', splitEnd[0].split(';;')[2], instanceEnv) + splitEnd[1];
                 break;
             default:
                 enriched += jsonQuery(
@@ -71,14 +71,17 @@ function numCommaformat(number){
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function locationCurrencyMapping(location, valueKey, set){
+function locationCurrencyMapping(location, valueKey, set, instanceEnv){
     if(!hasData(set))
         set = 'set01';
     let currencyMap = JSON.parse(fs.readFileSync("./config/locationCurrency/" + set + ".json"));
+    let language = jsonQuery(
+        'data[key=language].value',
+        {data: {data: instanceEnv}}).value
     try{
-        return currencyMap[location][valueKey];
+        return currencyMap[location][language][valueKey];
     } catch(e){
-        return currencyMap.default[valueKey];
+        return currencyMap.default[language][valueKey];
     }
 }
 

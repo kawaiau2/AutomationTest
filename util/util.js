@@ -8,12 +8,12 @@ import * as webAction from './webActions.js';
 global.config = {};
 try{
     console.log(process.env.npm_config_config);
-    global.config = JSON.parse(fs.readFileSync(process.env.npm_config_config));
+    config = JSON.parse(fs.readFileSync(process.env.npm_config_config));
 } catch(e) {
-    global.config = JSON.parse(fs.readFileSync('./config/config.json'));
+    config = JSON.parse(fs.readFileSync('./config/config.json'));
 }
-csvtojson().fromFile(global.config.suite).then();
-global.testSuite = await csvtojson().fromFile(global.config.suite);
+csvtojson().fromFile(config.suite).then();
+global.testSuite = await csvtojson().fromFile(config.suite);
 global.testNo = 0;
 global.iteration = {};
 global.fs = fs;
@@ -28,3 +28,40 @@ global.jsonQuery = jsonQuery;
 global.enrich = enrich;
 global._ = _;
 global.webAction = webAction;
+
+global.caseLog = "";
+
+global.addCaseLog = function(newLog, level){
+    switch (level){
+        case "second":
+            if(config.caseLog.second)
+                caseLog += "\r\n" + newLog;
+            break;
+        case "third":
+            if(config.caseLog.third)
+                caseLog += "\r\n" + newLog;
+            break;
+        default:
+            caseLog += "\r\n" + newLog;
+    }
+}
+
+global.isActualSame = function(actual, expect){
+    let len = 0;
+    if(actual.length > expect.length)
+        len = actual.length;
+    else
+        len = expect.length;
+
+    for(let i = 0; i < len; i++)
+        if(actual[i] != expect[i]){
+            console.log("Diff at " + (i+1) + ": Actual(" + actual[i] + ") and Expected(" + expect[i] + ")");
+            return false;
+        }
+    
+    return true;
+}
+
+global.clearCaseLog = function(){
+    caseLog = "";
+}

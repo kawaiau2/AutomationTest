@@ -46,7 +46,7 @@ for(let j=0; j < testSuite.length; j++){
                                     // console.log(instanceEnv)
                                     if(iteration.preIteration != '' && iteration.preIteration != null){
                                         try{
-                                            const preIteration = await import ('../common/' + iteration.preIteration);
+                                            const preIteration = await import ('../common/' + iteration.preIteration + '.js');
                                             instanceEnv = preIteration.initEnv(iteration, testSet, instanceEnv, runCount);
                                             runCount++;
                                         } catch(e){
@@ -78,7 +78,7 @@ for(let j=0; j < testSuite.length; j++){
                                         webStep = await csvtojson().fromFile('data/' + testSet + '/' + iteration.CaseFolder + '.csv');
                                     }
                                     try{
-                                        instanceEnv = await stepLooping.act(webStep, instanceEnv, iteration, testSuite[j].type, caseName);
+                                        instanceEnv = await stepLooping.act(webStep, instanceEnv, iteration, testSuite[j].type, caseName, testSet);
                                     } catch(e) {
                                         console.log(e)
                                         throw e
