@@ -37,6 +37,8 @@ async function setFileName(fileNameText) {
 async function closeBrowser(forceQuit){
     if(global.config.closeBrowserIfFailure || forceQuit){
         await driver.quit();
+        // addCaseLog(JSON.stringify(driver, null,4))
+        driver = null;
     }
 }
 

@@ -73,6 +73,7 @@ async function act(webStep, instanceEnv, iteration, runCount){
       console.log("Waiting the response....for " + (i*pollingWait/1000 +1) + "s");
       await webAction.driver.sleep(pollingWait);
     }
+  // console.log(request)
   if(request.request.url == null)
     throw new AssertError(expectEndPoint + ", Method: " + expectMethod + " Not Found!!!");
   let requestBody = await monitor.getRequestBody(request);
@@ -90,6 +91,7 @@ async function act(webStep, instanceEnv, iteration, runCount){
 
   verifyValue(valuesToVerify, actualRequestBody, actualResponseBody);
 
+  // console.log(instanceEnvironment)
   return instanceEnvironment;
     
 }
@@ -126,8 +128,14 @@ function verifyValue(valuesToVerify, actualRequestBody, actualResponseBody){
           break;
         case 'response':
           let actualResponseValue = jsonQuery(el.path, {data: actualResponseBody}).value;
-          if( actualResponseValue!= el.value)
-            throw new AssertError(el.path + " is not matched. Expect:" + el.value + ", Actual:" + actualResponseValue);
+          // if (actualResponseValue == null)
+          //   throw new AssertError(el.path + " is not found.");
+
+          if(el.name != null)
+            instanceEnvironment = updateInstanceEnv(instanceEnvironment, el.name, actualResponseValue);
+          else
+            if( actualResponseValue!= el.value)
+              throw new AssertError(el.path + " is not matched. Expect:" + el.value + ", Actual:" + actualResponseValue);
           break;
         default:
           console.log(el.path + " is skip for verify")

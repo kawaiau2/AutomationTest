@@ -2,30 +2,30 @@
     "suite": "data/trialSuite.csv",
     "certificate":{
         "host": [
-            "https://aaahk-apigw4-uat.aaaazure.biz:8556/*",
-            "https://aaahk-apigw4-sit.aaaazure.biz:8556/*"
+            "https://uat",
+            "https://sit"
         ],
-        "key": "./cert/aaahk-apigw4-sit.aaa.biz.key",
-        "cert": "./cert/aaahk-apigw4-sit.aaa.biz.cer"
+        "key": "./cert/sit",
+        "cert": "./cert/sit"
     },
     "env":[
         {
-            "key":"aaaConnectEndPoint",
-            "value":"{{domain_uat_ec}}",
+            "key":"ConnectEndPoint",
+            "value":"{{domain_uat}}",
             "type":"any"
         },
         {
-            "key":"fouPCEndPoint",
-            "value":"https://aaahk-re-fou-ua1.aaaazure.biz",
+            "key":"EndPoint",
+            "value":"https://",
             "type":"any"
         },
         {
-            "key":"kmnCorpLink",
+            "key":"CorpLink",
             "value":"UAT",
             "type":"any"
         }
     ],
-    "updateJiraResult": true,
+    "updateJiraResult": false,
     "schemaCheck": false, 
     "log":{
         "request": false,
@@ -41,13 +41,14 @@
         "longWait": 120000,
         "pageLoad": 30000,
         "pollingWait": 1000,
-        "debugWait": 0
+        "debugWait": 0,
+        "caseInterval": 1000
     },
     "closeBrowserIfFailure": true,
     "browser": "Edge",
     "headless": true,
     "screenCap": true,
-    "allStepScreenCap": true,
+    "allStepScreenCap": false,
     "caseLog": {
         "log": true,
         "second": false,

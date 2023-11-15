@@ -62,6 +62,12 @@ global.isActualSame = function(actual, expect){
     return true;
 }
 
+global.updateInstanceEnv = function(instanceEnv, envKey, envValue){
+    let updatedInstanceEnv = instanceEnv.filter(e => e['key'] != envKey);
+    updatedInstanceEnv.push({ type:'any', value:envValue, key:envKey });
+    return updatedInstanceEnv;
+}
+
 global.clearCaseLog = function(){
     caseLog = "";
 }

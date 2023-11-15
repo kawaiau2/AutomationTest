@@ -24,5 +24,5 @@
   &nbsp;&nbsp;git init  
   &nbsp;&nbsp;git add --all  
   &nbsp;&nbsp;git commit -m "xxx-xxx Initial Commit"  
-  &nbsp;&nbsp;git remote add origin https://{{username}}:{{[Personal access tokens](https://aaahk-bitbucket.aaaazure.biz/plugins/servlet/access-tokens/manage "Click here to setup Personal access tokens")}}@aaahk-bitbucket.aaaazure.biz/tribe/automation.git  
+  &nbsp;&nbsp;git remote add origin https://{{username}}:{{[Personal access tokens](https://aiahk-bitbucket.aiaazure.biz/plugins/servlet/access-tokens/manage "Click here to setup Personal access tokens")}}@aiahk-bitbucket.aiaazure.biz/tribe/automation.git  
   &nbsp;&nbsp;git push -u origin {{branch}}

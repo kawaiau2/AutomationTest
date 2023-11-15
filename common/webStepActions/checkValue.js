@@ -12,14 +12,13 @@ var pollingWait = global.config.delay.pollingWait;
 
 async function act(webStep, instanceEnv, iteration, runCount){
     let waitTime = webAction.selectWait(webStep);
+    let pageObject = jsonQuery(
+            'data[page=' + webStep.page + ' & name=' + webStep.object + ']',
+            {data: webAction.pageObject}
+        ).value
     await webAction.driver.wait(
         until.elementLocated(
-            webAction.locator(
-                jsonQuery(
-                    'data[page=' + webStep.page + ' & name=' + webStep.object + ']',
-                    {data: webAction.pageObject}
-                ).value
-            )
+            webAction.locator(pageObject)
         ),
         waitTime,
         'Timed out after ' + waitTime/1000 + 's'
@@ -28,7 +27,10 @@ async function act(webStep, instanceEnv, iteration, runCount){
         return el.getText();
     })
     .then((textValue) => {
-        assert.equal(textValue, webStep.value);
+        if(hasData(webStep.value))
+            assert.equal(textValue, webStep.value);
+        else
+            assert.equal(textValue, pageObject.value2);
     })
 
     return instanceEnv;

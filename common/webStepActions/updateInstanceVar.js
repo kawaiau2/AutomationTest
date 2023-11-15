@@ -15,8 +15,10 @@ async function act(webStep, instanceEnv, iteration, runCount){
     webStep.value.split(";;").forEach(arr => {
         let targetKey = arr.split('=')[0];
         let targetValue = arr.split('=')[1];
-        instanceEnv = instanceEnv.filter(el => el['key'] != targetKey && el['key'] != targetValue);
-        instanceEnv.push({ type:'any', value:targetValue, key:targetKey });
+        instanceEnv = updateInstanceEnv(instanceEnv, targetKey , targetValue);
+
+        // instanceEnv = instanceEnv.filter(el => el['key'] != targetKey && el['key'] != targetValue);
+        // instanceEnv.push({ type:'any', value:targetValue, key:targetKey });
     });
 
     return instanceEnv;

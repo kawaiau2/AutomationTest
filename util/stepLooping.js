@@ -1,6 +1,7 @@
 import './util.js';
 import * as webAct from '../util/webAct.js';
 const callCollection = await import ('../util/callNewman.js');
+import {getEnrichedInstanceEnv} from './stringEnrichment.js';
 
 // var driver
 var fileName = '';
@@ -28,7 +29,9 @@ async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, tes
     clearCaseLog();
     addCaseLog("Case: " + caseName);
     for(let x = 0; x<webStep.length; x++){
+        // console.log(enrich(JSON.stringify(webStep[x]), instanceEnv))
         let step = await JSON.parse(enrich(JSON.stringify(webStep[x]), instanceEnv));
+        instanceEnv = getEnrichedInstanceEnv();
         if(!isSkipAll){
             stepSkip = isStepSkip(step, instanceEnv);
             // console.log (stepSkip + ": " + webStep[x].runCondition + webStep[x].skipCondition);
@@ -48,8 +51,9 @@ async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, tes
                 totalLoop = step.value;
                 if(!Number.isInteger(totalLoop))
                 stepResult(caseName, x, step.stepName);
-                instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
-                instanceEnv.push({ type:'any', value:x+1, key:'loopStart' });
+                instanceEnv = updateInstanceEnv(instanceEnv, 'loopStart', x+1);
+                // instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
+                // instanceEnv.push({ type:'any', value:x+1, key:'loopStart' });
             } 
         } else if(step.action == 'loopEnd') {
             if(isSkipLoop || isSkipAll)
@@ -57,11 +61,14 @@ async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, tes
             else {
                 if(!Number.isInteger(totalLoop))
                     stepResult(caseName, x, step.stepName);
-                instanceEnv = instanceEnv.filter(el => el['key'] != 'loopEnd');
-                instanceEnv.push({ type:'any', value:x-1, key:'loopEnd' });
+
+                instanceEnv = updateInstanceEnv(instanceEnv, 'loopEnd', x-1);
+                // instanceEnv = instanceEnv.filter(el => el['key'] != 'loopEnd');
+                // instanceEnv.push({ type:'any', value:x-1, key:'loopEnd' });
                 loopCount++;
-                instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
-                instanceEnv.push({ type:'any', value:'na', key:'loopStart' });
+                instanceEnv = updateInstanceEnv(instanceEnv, 'loopStart', 'na');
+                // instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
+                // instanceEnv.push({ type:'any', value:'na', key:'loopStart' });
                 let stepNo = 'Step' + (x+1).toString().padStart(3, '0');
                 await webAct.setFileName(iteration, step.stepName, stepNo);
                 await webAction.screenCap(true);
@@ -78,16 +85,17 @@ async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, tes
             } else 
                 stepResult(caseName, x, step.stepName, skipReason, false);            
         }
-///redo
+
         if(hasData(step.endCondition) && !isSkipAll){
             isSkipAll = skipLogic(step.endCondition.split(";;"), instanceEnv);
             if(isSkipAll){
                 console.log("Case End Screen Capturing...")
-                console.log(step.endCondition)
+                console.log("!!!!!Skill afterward steps by :" + step.endCondition)
                 await webAction.screenCap(true);
+                break;
             }
-        } 
-///redo
+        }
+
         if(global.config.delay.debugWait > 0 )
             await webAction.driver.sleep(global.config.delay.debugWait);
     }
@@ -125,7 +133,7 @@ function skipLogic(condtions, instanceEnv){
                     case '!=':
                         if(condtions[i].search(logics[j]) >= 0){
                             values = condtions[i].split(logics[j]);
-                            console.log('values: ' + values)
+                            // console.log('values: ' + values)
                             if (jsonQuery('data[key=' + values[0] + '].value', {data: {data: instanceEnv}}).value != values[1])
                                 return true;
                         }

@@ -71,7 +71,6 @@ async function act(webStep, instanceEnv, iteration, runCount){
                 "//div[contains(@class, '" + statusType[stepStatus[i]] + "') and contains(text(), '" + (i+1) + "')]"
             )
         ).isDisplayed();
-        
         assert.ok(isStepBullet, "!!!Failed: Step Menu '" + stepNum[language][i] + "' doesn't show");
 
         if((stepStatus[i] == "active") || (viewType == "desktop")){
