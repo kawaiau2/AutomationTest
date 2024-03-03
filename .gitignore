@@ -8,3 +8,4 @@ package-lock.json
 text
 .DS_Store
 preRequest/*
+npmrc

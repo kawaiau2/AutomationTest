@@ -2,26 +2,26 @@
     "suite": "data/trialSuite.csv",
     "certificate":{
         "host": [
-            "https://aiahk-apigw4-uat.aiaazure.biz:8556/*",
-            "https://aiahk-apigw4-sit.aiaazure.biz:8556/*"
+            "https://www.makeplayingcards.com/",
+            "https://www.boardgamesmaker.com/"
         ],
-        "key": "./cert/aiahk-apigw4-sit.aia.biz.key",
-        "cert": "./cert/aiahk-apigw4-sit.aia.biz.cer"
+        "key": "./cert/*.key",
+        "cert": "./cert/*.cer"
     },
     "env":[
         {
-            "key":"aiaConnectEndPoint",
-            "value":"{{domain_uat_ec}}",
+            "key":"boardGame",
+            "value":"https://www.boardgamesmaker.com/",
             "type":"any"
         },
         {
-            "key":"fouPCEndPoint",
-            "value":"https://aiahk-re-fou-ua1.aiaazure.biz",
+            "key":"playingCard",
+            "value":"https://www.makeplayingcards.com/",
             "type":"any"
         },
         {
-            "key":"kmnCorpLink",
-            "value":"UAT",
+            "key":"qpLink",
+            "value":"{{boardGame}}",
             "type":"any"
         }
     ],
