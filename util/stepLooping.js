@@ -98,9 +98,10 @@ async function runStep(instanceEnv, testSet, iteration, step, stepNo){
         csvtojson().fromFile('data/' + testSet + '/' + step.value + '.csv').then();
         let subStepFile = await csvtojson().fromFile('data/' + testSet + '/' + step.value + '.csv');
         let subStep = JSON.parse(enrich(JSON.stringify(subStepFile), instanceEnv));
+        let isLooping = hasData(jsonQuery('data[key=loopStart].value', {data: {data:instanceEnv}}).value)
         instanceEnv = updateInstanceEnv(instanceEnv, 'loopStart', stepNo);
         for(let i=0; i < subStep.length; i++){
-            if(i==subStep.length-1)
+            if(i==subStep.length-1 && !isLooping)
                 instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
             instanceEnv = await webAct.act(subStep[i], instanceEnv, iteration, stepNo, i+1);
         }

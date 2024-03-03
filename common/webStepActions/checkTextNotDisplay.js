@@ -14,7 +14,7 @@ async function act(webStep, instanceEnv, iteration, runCount){
     let searchedText = "";
 
     if(hasData(webStep.value))
-        searchedText = hasData(webStep.value);
+        searchedText = enrich(webStep.value, instanceEnv);
     else
         searchedText = jsonQuery(
             'data[page=' + webStep.page + ' & name=' + webStep.object + '].value2',

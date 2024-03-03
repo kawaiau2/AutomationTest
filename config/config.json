@@ -55,7 +55,7 @@
         "new": true
     },
     "screenCap": true,
-    "allStepScreenCap": false,
+    "allStepScreenCap": true,
     "caseLog": {
         "log": true,
         "second": false,
