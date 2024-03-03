@@ -118,10 +118,7 @@ async function req(iteration, testSet){
             }
             step = "Step" + (args.cursor.position+1).toString().padStart(3, '0');
             requestName = args.item.name;
-            fileName = testSet + '/' + (caseName + "_" + step + "_" + requestName).replace(/[/\\?%*:|"<>]/g, '');
-            if (!fs.existsSync('./result/' + testSet)){
-                fs.mkdirSync('./result/' + testSet);
-            }
+            fileName = testSet + testSetPrefix + "/" + (caseName + "_" + step + "_" + requestName).replace(/[/\\?%*:|"<>]/g, '');
 
             // console.log(JSON.stringify(arg, null, 4));
             // console.log(args.response.stream.toString());
@@ -132,16 +129,17 @@ async function req(iteration, testSet){
             }
             console.log(caseName + " ==> " + step + ": " + requestName + " (code: " + args.response.code + ", time: " + args.response.responseTime + "ms, size: " + args.response.responseSize + ")");
             try{
+                // console.log(args.response.stream.toString())
                 let response = JSON.parse(args.response.stream.toString());
                 saveAndVerifyResponse(response);
             } catch(err){
                 // console.log(err)
                 if(args.response !== undefined){
-                    if(err.toString().search("no such file") < 0){
-                        if(JSON.parse(xmljs.xml2json(args.response.stream.toString())).elements[0].elements[0].elements[0].name != 'ns2:transferDataResponse'){
-                            console.log(err);
-                        }
+                    if(err.toString().search("no such file") < 0){  
                         try{
+                            if(JSON.parse(xmljs.xml2json(args.response.stream.toString())).elements[0].elements[0].elements[0].name != 'ns2:transferDataResponse'){
+                                console.log(err);
+                            }
                             if(err.toString().search("AssertError") > 0){
                                 console.log("Response: " + args.response.stream.toString());
                                 fs.writeFile('./result/' + fileName + '_response.json', args.response.stream.toString(),()=>{});
@@ -155,9 +153,16 @@ async function req(iteration, testSet){
                                 //Save iPoS response
                                 saveAndVerifyResponse(decodeiPoSResponse(args.response.stream, args.request.body.raw));
                             }
-                        } catch(e){
-                            // console.log(e)
-                            throw e
+                        } 
+                        catch(e){
+                            if(e.toString().search("Unexpected close tag") < 0)
+                                throw e
+                            else {
+                                if(global.config.caseLog.log&&global.config.caseLog.third)
+                                    console.log("Response: " + args.response.stream.toString());
+                                fs.writeFile('./result/' + fileName + '_response.json', args.response.stream.toString(),()=>{});
+                            }
+
                         }
                     } else {
                         console.log(step + ": " + requestName + "==>No Extected Schema File Found");
@@ -183,10 +188,23 @@ async function req(iteration, testSet){
         //     }
         // })
         .on('console', (error,args)=> {
-            if(global.config.log.console){
-                console.log("Postman console:");
-                console.log(JSON.stringify(args.messages, null, 4));
+            if(global.config.log.logConsole){
+                fs.appendFile("result/" + testSet + '/' + "console.log", args.messages.toString() + "\r\n", (err) => {
+                    if (err) { 
+                        console.log(err); 
+                    } 
+                    else { 
+                        console.log("Saved Postman console: " + args.messages);
+                    } 
+                });
+            } else {
+                if(global.config.log.console){
+                    // console.log("Postman console:");
+                    // console.log(JSON.stringify(args.messages, null, 4));
+                    console.log("Postman console: " + args.messages);
+                }
             }
+                
         })
         // .on('prerequest', (error,args)=> {                                        
         // })
@@ -232,7 +250,7 @@ async function req(iteration, testSet){
 function decodeiPoSResponse(responseStream, requestBodyRaw){
     let iPoSResponse = JSON.parse(xmljs.xml2json(responseStream.toString())).elements[0].elements[0].elements[0].elements[0].elements[0].text;
     let key = ''
-    let agentCode = JSON.parse(xmljs.xml2json(requestBodyRaw)).elements[0].elements[0].elements[0].elements[1].elements[0].text
+    let agentCode = JSON.parse(xmljs.xml2json(requestBodyRaw)).elements[0].elements[1].elements[0].elements[1].elements[0].text
     for (var i = 0; i < 32; i++){
         key += agentCode[i%agentCode.length]
     }

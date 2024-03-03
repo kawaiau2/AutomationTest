@@ -34,8 +34,8 @@ const {
 } = Mocha.Runner.constants;
 
 let order = 0;
-let testExecutionId = process.env.npm_config_execId;
-let testPlanId = process.env.npm_config_planId;
+// let testExecutionId = process.env.npm_config_execId;
+// let testPlanId = process.env.npm_config_planId;
 let updateJiraResult;
 try{
     updateJiraResult = JSON.parse(fs.readFileSync(process.env.npm_config_config)).updateJiraResult;
@@ -80,7 +80,7 @@ class MyReporter {
             });
             if(config.caseLog.log)
                 fs.writeFileSync(
-                    "result/" + test.parent.title + "/" + test.title.replace(": ", "_") + "_pass.log",
+                    "result/" + test.parent.title + testSetPrefix + "/" + test.title.replace(": ", "_") + "_pass.log",
                     caseLog + "\r\nResult:Pass, Date:" +  executionDate.toLocaleString() + ", Duration: " + test.duration
                     );
             clearCaseLog();
@@ -106,10 +106,11 @@ class MyReporter {
             }).catch((err)=>{
                 console.log("err: " + err);
             });
+            console.log(err)
             if(config.caseLog.log)
                 fs.writeFileSync(
-                    "result/" + test.parent.title + "/" + test.title.replace(": ", "_") + "_fail.log",
-                    caseLog + "\r\nError Log:\r\n" + JSON.stringify(err, null, 4) + "\r\nResult: Fail, Date:" +  executionDate.toLocaleString() + ", Duration: " + test.duration
+                    "result/" + test.parent.title + testSetPrefix + "/" + test.title.replace(": ", "_") + "_fail.log",
+                    caseLog + "\r\nError Log:\r\n" + err + "\r\nResult: Fail, Date:" +  executionDate.toLocaleString() + ", Duration: " + test.duration
                 );
             clearCaseLog();
             if(updateJiraResult)

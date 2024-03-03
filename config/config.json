@@ -2,25 +2,25 @@
     "suite": "data/trialSuite.csv",
     "certificate":{
         "host": [
-            "https://uat",
-            "https://sit"
+            "https://aiahk-apigw4-uat.aiaazure.biz:8556/*",
+            "https://aiahk-apigw4-sit.aiaazure.biz:8556/*"
         ],
-        "key": "./cert/sit",
-        "cert": "./cert/sit"
+        "key": "./cert/aiahk-apigw4-sit.aia.biz.key",
+        "cert": "./cert/aiahk-apigw4-sit.aia.biz.cer"
     },
     "env":[
         {
-            "key":"ConnectEndPoint",
-            "value":"{{domain_uat}}",
+            "key":"aiaConnectEndPoint",
+            "value":"{{domain_uat_ec}}",
             "type":"any"
         },
         {
-            "key":"EndPoint",
-            "value":"https://",
+            "key":"fouPCEndPoint",
+            "value":"https://aiahk-re-fou-ua1.aiaazure.biz",
             "type":"any"
         },
         {
-            "key":"CorpLink",
+            "key":"kmnCorpLink",
             "value":"UAT",
             "type":"any"
         }
@@ -31,7 +31,8 @@
         "request": false,
         "response": false,
         "schema": false,
-        "console": true,
+        "console": false,
+        "logConsole": false,
         "preRequest": false,
         "initEnv": false
     },
@@ -42,11 +43,17 @@
         "pageLoad": 30000,
         "pollingWait": 1000,
         "debugWait": 0,
-        "caseInterval": 1000
+        "caseInterval": 10
     },
-    "closeBrowserIfFailure": true,
-    "browser": "Edge",
-    "headless": true,
+    "closeBrowserIfFailure": false,
+    "browser": {
+        "browser": "Edge",
+        "overRide": true
+    },
+    "headless": {
+        "on": false,
+        "new": true
+    },
     "screenCap": true,
     "allStepScreenCap": false,
     "caseLog": {

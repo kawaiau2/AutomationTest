@@ -66,9 +66,9 @@ async function act(webStep, instanceEnv, iteration, runCount){
     let stepStatus = webStep.value.split(';;');
 
     for(var i = 0; i < stepStatus.length; i++){
-        let isStepBullet =  webAction.driver.findElement(
+        let isStepBullet = await webAction.driver.findElement(
             By.xpath(
-                "//div[contains(@class, '" + statusType[stepStatus[i]] + "') and contains(text(), '" + (i+1) + "')]"
+                "//div[contains(@class, '" + viewType + "')]/div/div[contains(@class, '" + statusType[stepStatus[i]] + "') and contains(text(), '" + (i+1) + "')]"
             )
         ).isDisplayed();
         assert.ok(isStepBullet, "!!!Failed: Step Menu '" + stepNum[language][i] + "' doesn't show");
@@ -76,7 +76,6 @@ async function act(webStep, instanceEnv, iteration, runCount){
         if((stepStatus[i] == "active") || (viewType == "desktop")){
             let isStepNumShow = await isElementLocated(webAction.driver, viewType, stepStatus[i], stepNum[language][i]);
             let isStepNameShow = await isElementLocated(webAction.driver, viewType, stepStatus[i], stepName[language][i]);
-
             assert.ok(isStepNumShow, "!!!Failed: Step Menu '" + stepNum[language][i] + "' doesn't show");
             assert.ok(isStepNameShow, "!!!Failed: Step Menu '" + stepNum[language][i] + "' doesn't show");
         }
@@ -87,10 +86,10 @@ async function act(webStep, instanceEnv, iteration, runCount){
 }
 
 async function isElementLocated(driver, viewType, stepStatus, name){
-    console.log(elementPaths[viewType]
-        .replace("{{type}}", viewType)
-            .replace("{{status}}", statusType[stepStatus])
-                .replace("{{name}}", name))
+    // console.log(elementPaths[viewType]
+    //     .replace("{{type}}", viewType)
+    //         .replace("{{status}}", statusType[stepStatus])
+    //             .replace("{{name}}", name))
     return await driver.findElement(
         By.xpath(
             elementPaths[viewType]

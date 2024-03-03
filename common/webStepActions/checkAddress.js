@@ -26,7 +26,7 @@ async function act(webStep, instanceEnv, iteration, runCount){
         actualLink = await webAction.driver.getCurrentUrl();
         if(actualLink!=expectLink){
             console.log('Waiting.....' + i + '.....Current:' + actualLink);
-            await webAction.driver.sleep(pollingWait);
+            await webAction.sleep(pollingWait);
         }
     }
     assert.equal(actualLink, expectLink, "Redirect to wrong address");

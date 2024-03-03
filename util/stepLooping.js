@@ -6,13 +6,13 @@ import {getEnrichedInstanceEnv} from './stringEnrichment.js';
 // var driver
 var fileName = '';
 var step = '';
-var isSkipLoop = false;
 var pageObject = {}
 let env = {};
 var link = '';
 var loopCount = 0;
 var totalLoop = 0;
 var isSkipAll = false;
+var isSkipLoop = false;
 
 function AssertError(msg = "") {
     this.msg = msg;
@@ -20,21 +20,15 @@ function AssertError(msg = "") {
 }
 AssertError.prototype = Error.prototype;
 
-// var isDriverLive = false;
 async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, testSet) {
-    // webStep = JSON.parse(enrich(JSON.stringify(webStep), instanceEnv));
-    isSkipAll = false;
     var skipReason = "";
     let stepSkip = false;
-    clearCaseLog();
-    addCaseLog("Case: " + caseName);
+    instanceEnv = initStepLoop(instanceEnv, caseName);
     for(let x = 0; x<webStep.length; x++){
-        // console.log(enrich(JSON.stringify(webStep[x]), instanceEnv))
         let step = await JSON.parse(enrich(JSON.stringify(webStep[x]), instanceEnv));
         instanceEnv = getEnrichedInstanceEnv();
         if(!isSkipAll){
             stepSkip = isStepSkip(step, instanceEnv);
-            // console.log (stepSkip + ": " + webStep[x].runCondition + webStep[x].skipCondition);
             if(stepSkip){
                 if(hasData(step.runCondition))
                     skipReason = "NOT '" + step.runCondition + "'";
@@ -42,7 +36,6 @@ async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, tes
                     skipReason = "'" + step.skipCondition + "'";
             }
         }
-        // console.log("000 " + (x+1).toString().padStart(3,'0') + " 000 " + isSkipAll + " 000 " + webStep[x].stepName)
         if(step.action == 'loopStart'){
             if(stepSkip || isSkipAll){
                 isSkipLoop = true;
@@ -52,8 +45,6 @@ async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, tes
                 if(!Number.isInteger(totalLoop))
                 stepResult(caseName, x, step.stepName);
                 instanceEnv = updateInstanceEnv(instanceEnv, 'loopStart', x+1);
-                // instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
-                // instanceEnv.push({ type:'any', value:x+1, key:'loopStart' });
             } 
         } else if(step.action == 'loopEnd') {
             if(isSkipLoop || isSkipAll)
@@ -63,12 +54,8 @@ async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, tes
                     stepResult(caseName, x, step.stepName);
 
                 instanceEnv = updateInstanceEnv(instanceEnv, 'loopEnd', x-1);
-                // instanceEnv = instanceEnv.filter(el => el['key'] != 'loopEnd');
-                // instanceEnv.push({ type:'any', value:x-1, key:'loopEnd' });
                 loopCount++;
                 instanceEnv = updateInstanceEnv(instanceEnv, 'loopStart', 'na');
-                // instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
-                // instanceEnv.push({ type:'any', value:'na', key:'loopStart' });
                 let stepNo = 'Step' + (x+1).toString().padStart(3, '0');
                 await webAct.setFileName(iteration, step.stepName, stepNo);
                 await webAction.screenCap(true);
@@ -80,10 +67,12 @@ async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, tes
                     instanceEnv = await callCollection.req(iteration, testSet)
                 } else {
                     stepResult(caseName, x, step.stepName);
-                    instanceEnv = await webAct.act(step, instanceEnv, iteration, x+1);
+                    instanceEnv = await runStep(instanceEnv, testSet, iteration, step, x+1);
                 }
-            } else 
-                stepResult(caseName, x, step.stepName, skipReason, false);            
+            } else {
+                stepResult(caseName, x, step.stepName, skipReason, false); 
+            }
+                           
         }
 
         if(hasData(step.endCondition) && !isSkipAll){
@@ -96,13 +85,44 @@ async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, tes
             }
         }
 
-        if(global.config.delay.debugWait > 0 )
-            await webAction.driver.sleep(global.config.delay.debugWait);
     }
 
     if(testSuiteType != 'api' && webStep[webStep.length-1].action != 'api' && iteration.type != 'api')
         instanceEnv = await webAct.act({action: 'closeBrowser'}, instanceEnv)
+    
+    return instanceEnv;
+}
+
+async function runStep(instanceEnv, testSet, iteration, step, stepNo){
+    if(step.action == "subStep"){
+        csvtojson().fromFile('data/' + testSet + '/' + step.value + '.csv').then();
+        let subStepFile = await csvtojson().fromFile('data/' + testSet + '/' + step.value + '.csv');
+        let subStep = JSON.parse(enrich(JSON.stringify(subStepFile), instanceEnv));
+        instanceEnv = updateInstanceEnv(instanceEnv, 'loopStart', stepNo);
+        for(let i=0; i < subStep.length; i++){
+            if(i==subStep.length-1)
+                instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
+            instanceEnv = await webAct.act(subStep[i], instanceEnv, iteration, stepNo, i+1);
+        }
+    } else
+        instanceEnv = await webAct.act(step, instanceEnv, iteration, stepNo);
+    
+    if(global.config.delay.debugWait > 0)
+        try{
+            await webAction.sleep(global.config.delay.debugWait);
+        } catch(e){
+            console.log(e);
+        }
+        
+    return instanceEnv;
+}
+
+function initStepLoop(instanceEnv, caseName){
     instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
+    isSkipAll = false;
+    isSkipLoop = false;
+    clearCaseLog();
+    addCaseLog("Case: " + caseName);
     return instanceEnv;
 }
 

@@ -13,7 +13,7 @@ try{
     config = JSON.parse(fs.readFileSync('./config/config.json'));
 }
 csvtojson().fromFile(config.suite).then();
-global.testSuite = await csvtojson().fromFile(config.suite);
+global.testSuites = await csvtojson().fromFile(config.suite);
 global.testNo = 0;
 global.iteration = {};
 global.fs = fs;
@@ -71,3 +71,7 @@ global.updateInstanceEnv = function(instanceEnv, envKey, envValue){
 global.clearCaseLog = function(){
     caseLog = "";
 }
+
+global.testExecutionId = process.env.npm_config_execId;
+global.testPlanId = process.env.npm_config_planId;
+global.testSetPrefix = "";

@@ -15,19 +15,39 @@ let config = global.config;
 
 let instanceEnv = global.config.env;
 
-let testSuite = global.testSuite;
-for(let j=0; j < testSuite.length; j++){
-    if(testSuite[j].skip !='y' && testSuite[j].skip !='Y'){
-        let testSet =testSuite[j].scenario;
+let testSuites = global.testSuites;
+
+for await (const testSuite of testSuites){
+    // console.log(testSuite)
+    if(testSuite.skip !='y' && testSuite.skip !='Y'){
+        let testSet = testSuite.scenario;
+        if(hasData(testSuite.testPlan)){
+            testPlanId = testSuite.testPlan;
+        }
+        if(hasData(testSuite.testExec)){
+            testExecutionId = testSuite.testExec;
+        }
+        if(hasData(testPlanId))
+            testSetPrefix = "_" + testPlanId;
+        try{
+            fs.unlinkSync("result" + "/" + testSet + testSetPrefix + "/" + "console.log");
+        } catch (e){
+
+        }
         csvtojson().fromFile('data/' + testSet + '/iterationfile.csv').then();
         let data = await csvtojson().fromFile('data/' + testSet + '/iterationfile.csv');
-        if(testSuite[j].type == 'web'){
-            await webAct.setWebObject(testSet);
+        if(testSuite.type == 'web'){
+            await webAct.setWebObject(testSet, testPlanId, testExecutionId);
         }
+        
+        if (!fs.existsSync('./result/' + testSet + testSetPrefix)){
+            fs.mkdirSync('./result/' + testSet + testSetPrefix);
+        }
+
         describe(testSet, () => {
             let stages = ['initEnv', 'preReq', 'step'];
             let runCount = 0;
-            data.forEach(iteration => {
+            data.forEach(async iteration => {
                 if(iteration.skip != 'y' && iteration.skip != 'Y'){
                     it(iteration.CaseId + ": " + iteration.iterationName, async function() {
                         global.iteration = iteration;
@@ -77,12 +97,7 @@ for(let j=0; j < testSuite.length; j++){
                                         csvtojson().fromFile('data/' + testSet + '/' + iteration.CaseFolder + '.csv').then();
                                         webStep = await csvtojson().fromFile('data/' + testSet + '/' + iteration.CaseFolder + '.csv');
                                     }
-                                    try{
-                                        instanceEnv = await stepLooping.act(webStep, instanceEnv, iteration, testSuite[j].type, caseName, testSet);
-                                    } catch(e) {
-                                        console.log(e)
-                                        throw e
-                                    }
+                                    instanceEnv = await stepLooping.act(webStep, instanceEnv, iteration, testSuite.type, caseName, testSet);
                                     break;
                                 default:
                                     console.log('Staging error>>>>>>>>');
@@ -94,12 +109,11 @@ for(let j=0; j < testSuite.length; j++){
                     console.log("!!!Case: " + iteration.iterationName + " is skip!!!");
                     it.skip(iteration.iterationName, async function(){});
                 }
-                
             })
         });
     } else {
-        console.log("!!!Test Set: " + testSuite[j].scenario + " is skip!!!");
-        describe.skip(testSuite[j].scenario, async function(){});
+        console.log("!!!Test Set: " + testSuite.scenario + " is skip!!!");
+        describe.skip(testSuite.scenario, async function(){});
     }
 
 }

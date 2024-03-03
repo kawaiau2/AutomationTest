@@ -8,13 +8,26 @@ function AssertError(msg = "") {
 AssertError.prototype = Error.prototype;
 
 async function act(webStep, instanceEnv, iteration, runCount){
-    let link = enrich(
-        jsonQuery(
-            'data[page=' + webStep.page + ' & name=' + webStep.object + '].value1',
+    if(webAction.pageObject == null){
+        console.log("Can't read page object")
+    }
+    let link = "";
+    let querString = 'data[page=' + webStep.page + ' & name=' + webStep.object + '].value1';
+    let pageObject = jsonQuery(
+            querString,
             {data: webAction.pageObject}
-        ).value,
-        instanceEnv);
-    await webAction.launchBrowser(instanceEnv);
+        ).value;
+    if(pageObject != null)
+        link = enrich(pageObject, instanceEnv);
+    else {
+        throw new AssertError("No Link Found!!!(" + querString + ")");
+    }
+    try{
+        await webAction.launchBrowser(instanceEnv);
+    } catch (e){
+        console.log(e)
+    }
+
     await webAction.driver.get(link);
     return instanceEnv;
 }

@@ -12,10 +12,10 @@ function updateResult(testPlanId, testExecutionId, caseId, testSuite, testStatus
             switch(stages[i]){
                 case 'initResult':
                     try{
-                        fs.readdirSync("./result/" + testSuite).forEach((file)=>{
+                        fs.readdirSync("./result/" + testSuite + testSetPrefix).forEach((file)=>{
                             if(file.indexOf(caseId) == 0)
                                 evidences.push({
-                                    "data": fs.readFileSync("./result/" + testSuite + "/" + file).toString('base64'),
+                                    "data": fs.readFileSync("./result/" + testSuite + testSetPrefix + "/" + file).toString('base64'),
                                     "filename": file
                                 })
                         })

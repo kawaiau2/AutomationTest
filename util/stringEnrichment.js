@@ -71,7 +71,7 @@ function enrich (content, instanceEnv){
 
 function hkPhoneGen (){
     const dateTime = new Date();
-    //current date time Oct 15 15:13 => 90151513
+    //current date time Oct 30 15:15:13 => 90151513
     converted = (
         (dateTime.getDate() + 60) * 1000000
         + dateTime.getHours() * 10000

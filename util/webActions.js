@@ -11,6 +11,7 @@ let env = {};
 var link = '';
 var TIMEOUT = 100000;
 var fileName = '';
+var currentDriverCaseId = '';
 
 function AssertError(msg = "") {
     this.msg = msg;
@@ -34,8 +35,8 @@ async function setFileName(fileNameText) {
 }
 
 
-async function closeBrowser(forceQuit){
-    if(global.config.closeBrowserIfFailure || forceQuit){
+async function closeBrowser(caseId, forceQuit){
+    if(caseId == currentDriverCaseId && (global.config.closeBrowserIfFailure || forceQuit)){
         await driver.quit();
         // addCaseLog(JSON.stringify(driver, null,4))
         driver = null;
@@ -52,17 +53,21 @@ async function launchBrowser(instanceEnv){
         fullScr = true;
     }
        
-    if(!hasData(browser))
-        browser = global.config.browser;
+    if(!hasData(browser)&&!global.config.browser.overRider)
+        browser = global.config.browser.browser;
     else 
         global.config.browser = browser;
+
     switch(browser){
         case 'Chrome':
             const chromeService = new chrome.ServiceBuilder(path.resolve('external/chromedriver'))
             const chromeOption = new chrome.Options();
             chromeOption.addArguments("--window-size=" + resolution);
-            if(global.config.headless){
-                chromeOption.headless();
+            if(global.config.headless.on){
+                if(global.config.headless.new)
+                    chromeOption.addArguments("--headless=new");
+                else
+                    chromeOption.addArguments("--headless=old");
             }
             driver = await new Builder()
             .forBrowser('chrome')
@@ -74,8 +79,11 @@ async function launchBrowser(instanceEnv){
             const edgeService = new edge.ServiceBuilder(path.resolve('external/msedgedriver'))
             const edgeOption = new edge.Options();
             edgeOption.addArguments("--window-size=" + resolution);
-            if(global.config.headless){
-                edgeOption.headless();
+            if(global.config.headless.on){
+                if(global.config.headless.new)
+                    edgeOption.addArguments("--headless=new");
+                else
+                    edgeOption.addArguments("--headless=old");
             }
             driver = await new Builder()
             .forBrowser(Browser.EDGE)
@@ -85,8 +93,9 @@ async function launchBrowser(instanceEnv){
             break;
         default:
             throw new AssertError(browser + " is not supported");
-
     }
+    // console.log(driver)
+    currentDriverCaseId = jsonQuery('data[key=CaseId].value', {data: {data:instanceEnv}}).value;
     if(fullScr)
         await driver.manage().window().maximize();
 }
@@ -97,20 +106,25 @@ async function screenCap(isStepCap){
             await driver.manage().setTimeouts( { implicit: TIMEOUT, pageLoad: TIMEOUT, script: TIMEOUT } )
         }
         if(!isStepCap || global.config.allStepScreenCap){
-            let result = (isStepCap) ? 'pass':'fail';
-            console.log('./result/' + fileName + '_' + result + '.png')
-            console.log('Capturing screen...')
-            await driver.sleep(100);
-            await driver.takeScreenshot().then(
-                function(image, err) {
-                    fs.writeFile('./result/' + fileName + '_' + result + '.png', image, 'base64', function(err) {
-                        if(err != null)
-                            console.log(err);
-                    });
-                    if(err != undefined)
-                        throw err
-                }
-            );
+            if(driver != null){
+                let result = (isStepCap) ? 'pass':'fail';
+                console.log('./result/' + fileName + '_' + result + '.png')
+                console.log('Capturing screen...')
+                await sleep(100);
+                await driver.takeScreenshot().then(
+                    function(image, err) {
+                        fs.writeFile('./result/' + fileName + '_' + result + '.png', image, 'base64', function(err) {
+                            if(err != null)
+                                console.log(err);
+                        });
+                        if(err != undefined)
+                            throw err
+                    }
+                );
+            } else {
+                console.log("!!!Warning: Failed to screen cature due to driver is null!!!");
+                addCaseLog("!!!Warning: Failed to screen cature due to driver is null!!!");
+            }
         }
     }
 }
@@ -142,6 +156,13 @@ function selectWait(webStep){
         return global.config.delay.instantWait;
 }
 
+async function sleep(mSec){
+    if(driver != null)
+        driver.sleep(mSec);
+    else
+        await new Promise(r => setTimeout(r, mSec));
+}
+
 
 export { 
     driver,
@@ -152,5 +173,6 @@ export {
     closeBrowser,
     launchBrowser,
     screenCap,
-    selectWait
+    selectWait,
+    sleep
 };
