@@ -3,7 +3,16 @@
 ### Direct Run
   &nbsp;&nbsp;npm install  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//git pull test script  
-  &nbsp;&nbsp;Copy cert and data folder (API SSL cert if required, data files i.e. ./data/{{project name}}/env.postman_environment.json, ./data/{{project name}}/iterationfile.csv, ./data/{{project name}}/{{project name}}.postman_collection.json, ./data/{{project name}}/pageObject.csv, ./data/{{project name}}/{{flow name}}.csv, ./data/{{project name}}/{{submit flow name}}.csv
+  &nbsp;&nbsp;Copy cert and data folder\
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i.e.\
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. API SSL cert if required, data files\
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Files in Data folder\
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a) ./data/{{project name}}/env.postman_environment.json\
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; b) ./data/{{project name}}/iterationfile.csv\
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; c) ./data/{{project name}}/{{project name}}.postman_collection.json\
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; d) ./data/{{project name}}/pageObject.csv\
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e) ./data/{{project name}}/{{flow name}}.csv\
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; f) ./data/{{project name}}/{{submit flow name}}.csv\
   &nbsp;&nbsp;npm test  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//i.e. npm --config=./config/{{config name}} --planId={{Plan JIRA Key}} --execId={{Plan JIRA Key}} test  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//i.e. mocha -t 120000  
