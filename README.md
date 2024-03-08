@@ -3,7 +3,7 @@
 ### Direct Run
   &nbsp;&nbsp;npm install  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//git pull test script  
-  &nbsp;&nbsp;Copy cert and data folder  
+  &nbsp;&nbsp;Copy cert and data folder (API SSL cert if required, data files i.e. ./data/{{project name}}/env.postman_environment.json, ./data/{{project name}}/iterationfile.csv, ./data/{{project name}}/{{project name}}.postman_collection.json, ./data/{{project name}}/pageObject.csv, ./data/{{project name}}/{{flow name}}.csv, ./data/{{project name}}/{{submit flow name}}.csv
   &nbsp;&nbsp;npm test  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//i.e. npm --config=./config/{{config name}} --planId={{Plan JIRA Key}} --execId={{Plan JIRA Key}} test  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//i.e. mocha -t 120000  
