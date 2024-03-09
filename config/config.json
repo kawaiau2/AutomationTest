@@ -2,26 +2,26 @@
     "suite": "data/trialSuite.csv",
     "certificate":{
         "host": [
-            "https://www.makeplayingcards.com/",
-            "https://www.boardgamesmaker.com/"
+            "https://aiahk-apigw4-uat.aiaazure.biz:8556/*",
+            "https://aiahk-apigw4-sit.aiaazure.biz:8556/*"
         ],
-        "key": "./cert/*.key",
-        "cert": "./cert/*.cer"
+        "key": "./cert/aiahk-apigw4-sit.aia.biz.key",
+        "cert": "./cert/aiahk-apigw4-sit.aia.biz.cer"
     },
     "env":[
         {
-            "key":"boardGame",
-            "value":"https://www.boardgamesmaker.com/",
+            "key":"aiaConnectEndPoint",
+            "value":"{{domain_uat_ec}}",
             "type":"any"
         },
         {
-            "key":"playingCard",
-            "value":"https://www.makeplayingcards.com/",
+            "key":"fouPCEndPoint",
+            "value":"https://aiahk-re-fou-ua1.aiaazure.biz",
             "type":"any"
         },
         {
-            "key":"qpLink",
-            "value":"{{boardGame}}",
+            "key":"kmnCorpLink",
+            "value":"UAT",
             "type":"any"
         }
     ],
@@ -45,13 +45,12 @@
         "debugWait": 0,
         "caseInterval": 10
     },
-    "closeBrowserIfFailure": false,
     "browser": {
         "browser": "Edge",
         "overRide": true
     },
     "headless": {
-        "on": false,
+        "on": true,
         "new": true
     },
     "screenCap": true,

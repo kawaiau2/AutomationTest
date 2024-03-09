@@ -1,3 +1,4 @@
+import { enrich } from '../../util/stringEnrichment.js';
 import '../../util/util.js';
 import {Builder, Browser, By, Key, until} from 'selenium-webdriver';
 

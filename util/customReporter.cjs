@@ -1,6 +1,6 @@
 'use strict';
 require('util');
-const updateInstantResult = require('./updateInstantResult.cjs')
+const updateInstantResult = require('./UpdateInstantResult.cjs')
 const Mocha = require('mocha');
 const csvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
@@ -86,7 +86,8 @@ class MyReporter {
             clearCaseLog();
             if(updateJiraResult)
                 updateInstantResult.updateResult(
-                    testPlanId, testExecutionId,
+                    testPlanId,
+                    testExecutionId,
                     test.title.split(':')[0],
                     test.parent.title,
                     'PASS'
@@ -106,7 +107,7 @@ class MyReporter {
             }).catch((err)=>{
                 console.log("err: " + err);
             });
-            console.log(err)
+            // console.log(err)
             if(config.caseLog.log)
                 fs.writeFileSync(
                     "result/" + test.parent.title + testSetPrefix + "/" + test.title.replace(": ", "_") + "_fail.log",

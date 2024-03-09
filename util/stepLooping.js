@@ -23,6 +23,8 @@ AssertError.prototype = Error.prototype;
 async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, testSet) {
     var skipReason = "";
     let stepSkip = false;
+    isSkipAll = false;
+    isSkipLoop = false;
     instanceEnv = initStepLoop(instanceEnv, caseName);
     for(let x = 0; x<webStep.length; x++){
         let step = await JSON.parse(enrich(JSON.stringify(webStep[x]), instanceEnv));
@@ -55,7 +57,7 @@ async function act(webStep, instanceEnv, iteration, testSuiteType, caseName, tes
 
                 instanceEnv = updateInstanceEnv(instanceEnv, 'loopEnd', x-1);
                 loopCount++;
-                instanceEnv = updateInstanceEnv(instanceEnv, 'loopStart', 'na');
+                instanceEnv = removeValOfInstanceEnv(instanceEnv, 'loopStart');
                 let stepNo = 'Step' + (x+1).toString().padStart(3, '0');
                 await webAct.setFileName(iteration, step.stepName, stepNo);
                 await webAction.screenCap(true);
@@ -98,11 +100,11 @@ async function runStep(instanceEnv, testSet, iteration, step, stepNo){
         csvtojson().fromFile('data/' + testSet + '/' + step.value + '.csv').then();
         let subStepFile = await csvtojson().fromFile('data/' + testSet + '/' + step.value + '.csv');
         let subStep = JSON.parse(enrich(JSON.stringify(subStepFile), instanceEnv));
-        let isLooping = hasData(jsonQuery('data[key=loopStart].value', {data: {data:instanceEnv}}).value)
+        let isLooping = hasData(jsonQuery('data[key=loopStart].value', {data: {data: instanceEnv}}).value)
         instanceEnv = updateInstanceEnv(instanceEnv, 'loopStart', stepNo);
         for(let i=0; i < subStep.length; i++){
             if(i==subStep.length-1 && !isLooping)
-                instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
+                instanceEnv = removeValOfInstanceEnv(instanceEnv, 'loopStart');
             instanceEnv = await webAct.act(subStep[i], instanceEnv, iteration, stepNo, i+1);
         }
     } else
@@ -119,7 +121,7 @@ async function runStep(instanceEnv, testSet, iteration, step, stepNo){
 }
 
 function initStepLoop(instanceEnv, caseName){
-    instanceEnv = instanceEnv.filter(el => el['key'] != 'loopStart');
+    instanceEnv = removeValOfInstanceEnv(instanceEnv, 'loopStart');
     isSkipAll = false;
     isSkipLoop = false;
     clearCaseLog();

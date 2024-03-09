@@ -24,7 +24,7 @@ async function act(webStep, instanceEnv, iteration, stepNo, subStepNo) {
     switch (webStep.action){
         case 'closeBrowser':
             try {
-                await webAction.closeBrowser(caseId, true);
+                await webAction.closeBrowser();
             }catch(e){
                 console.log('Warning:');
                 console.log(e);
@@ -47,7 +47,7 @@ async function act(webStep, instanceEnv, iteration, stepNo, subStepNo) {
                 console.log(e);
                 if(e.toString().search("No Link Found") < 0){
                     await webAction.screenCap(false);
-                    webAction.closeBrowser(caseId);
+                    webAction.closeBrowser();
                 }
                 throw e;
                 

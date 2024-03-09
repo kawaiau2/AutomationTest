@@ -75,3 +75,7 @@ global.clearCaseLog = function(){
 global.testExecutionId = process.env.npm_config_execId;
 global.testPlanId = process.env.npm_config_planId;
 global.testSetPrefix = "";
+
+global.removeValOfInstanceEnv = function(instanceEnv, key){
+    return instanceEnv.filter(el => el['key'] != key);
+}

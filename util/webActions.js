@@ -35,12 +35,9 @@ async function setFileName(fileNameText) {
 }
 
 
-async function closeBrowser(caseId, forceQuit){
-    if(caseId == currentDriverCaseId && (global.config.closeBrowserIfFailure || forceQuit)){
+async function closeBrowser(){
         await driver.quit();
-        // addCaseLog(JSON.stringify(driver, null,4))
         driver = null;
-    }
 }
 
 async function launchBrowser(instanceEnv){
