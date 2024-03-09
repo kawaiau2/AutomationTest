@@ -35,7 +35,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "ODg3MjgzNjIzNDg3Ok4ZqK6Dd+X19UdKO08pIQWb/5y9",
+									"value": "xxx",
 									"type": "string"
 								}
 							]
@@ -43,12 +43,10 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "https://aiahk-jira.aiaazure.biz/rest/raven/1.0/import/execution",
+							"raw": "https://xxx/rest/raven/1.0/import/execution",
 							"protocol": "https",
 							"host": [
-								"aiahk-jira",
-								"aiaazure",
-								"biz"
+								"xxx"
 							],
 							"path": [
 								"rest",
@@ -71,12 +69,12 @@
 					"basic": [
 						{
 							"key": "password",
-							"value": "ODg3MjgzNjIzNDg3Ok4ZqK6Dd+X19UdKO08pIQWb/5y9",
+							"value": "xxx",
 							"type": "string"
 						},
 						{
 							"key": "username",
-							"value": "bell-b.au@aia.com",
+							"value": "xxx",
 							"type": "string"
 						}
 					]
@@ -84,12 +82,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://aiahk-jira.aiaazure.biz/rest/raven/1.0/api/test/FOU-710/step",
+					"raw": "https://xxx/rest/raven/1.0/api/test/FOU-710/step",
 					"protocol": "https",
 					"host": [
-						"aiahk-jira",
-						"aiaazure",
-						"biz"
+						"xxx"
 					],
 					"path": [
 						"rest",
